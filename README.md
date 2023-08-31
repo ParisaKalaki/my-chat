@@ -104,3 +104,4 @@ docker container and examine the application programmatically based on the
 tests.
 
 (This isn't yet discussed in the materials, but will be sooner or later!)
+# deploy-demo
