@@ -1,0 +1,63 @@
+# Render.yaml
+
+# Define the name of your service
+name: my-app
+
+# Specify the environment (production, development, etc.)
+env: production
+
+# Specify the build environment for your services
+buildCommand: docker-compose build
+startCommand: docker-compose up -d
+
+# Services section
+services:
+  - name: app
+    plan: web
+    buildCommand: docker-compose build app
+    startCommand: docker-compose up -d app
+    envVars:
+      - key: PORT
+        fromDatabase: false
+        generator:
+          type: random
+          length: 5
+    dependsOn:
+      - database
+      - flyway
+    envFiles:
+      - path: project.env
+        optional: false
+
+  - name: database
+    plan: data
+    envVars:
+      - key: POSTGRES_DB
+        generator:
+          type: random
+          length: 8
+    volumes:
+      - path: /var/lib/postgresql/data
+        size: 10
+    image: postgres:14.1
+
+  - name: flyway
+    plan: web
+    buildCommand: docker-compose build flyway
+    startCommand: docker-compose up -d flyway
+    dependsOn:
+      - database
+    envFiles:
+      - path: project.env
+        optional: false
+
+  - name: e2e-playwright
+    plan: web
+    buildCommand: docker-compose build e2e-playwright
+    startCommand: docker-compose up -d e2e-playwright
+    networkMode: host
+    dependsOn:
+      - app
+    volumes:
+      - path: /e2e-playwright/tests
+        optional: false
