@@ -1,7 +1,7 @@
 <h1>chat</h1>
 <form method="POST">
-  Name: <input type="text" name="sender" /><br/>
-  Address: <input type="text" name="message" /><br/>
+  sender: <input type="text" name="sender" /><br/>
+  Message: <input type="text" name="message" /><br/>
   <input type="submit" value="Submit!" />
 </form>
 
